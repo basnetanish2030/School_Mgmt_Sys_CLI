@@ -27,6 +27,14 @@ class SchoolDatabase
                               [student.name, student.address, student.contact, student.roll_no, student.class_id])
       puts "Added new student: #{student}"
     end
+
+    def display_students
+      result = @connect_db.exec_params('SELECT name, address, contact, roll_no, class_id FROM student')
+      result.each do |row|
+        student = Student.new(row['name'], row['class_id'], row['roll_no'], row['address'], row['contact'])
+        puts student
+      end
+    end
 end
 
 class School
@@ -49,6 +57,10 @@ class School
   
       student = Student.new(name, class_id, roll_no, address, contact)
       @database.add_student(student)
+    end
+
+    def display_students
+      @database.display_students
     end
 
     def menu

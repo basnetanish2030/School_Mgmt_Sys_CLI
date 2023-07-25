@@ -35,6 +35,11 @@ class SchoolDatabase
         puts student
       end
     end
+
+    def edit_student(id, address, contact)
+      @connect_db.exec_params('UPDATE student SET address=$1, contact=$2 WHERE student_id=$3', [address, contact, id])
+      puts "Updated address and contact of student having ID: #{id}"
+    end
 end
 
 class School
@@ -61,6 +66,18 @@ class School
 
     def display_students
       @database.display_students
+    end
+
+    def edit_student
+      puts 'Enter the id of the student whose details you want to edit!'
+      print 'Enter id:'
+      id = gets.chomp
+      print 'Edit address:'
+      address = gets.chomp
+      print 'Change Contact:'
+      contact = gets.chomp
+
+      @database.edit_student(id, address, contact)
     end
 
     def menu

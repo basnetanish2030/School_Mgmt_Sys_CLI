@@ -16,3 +16,57 @@ class Student
     "#{name}, #{class_id}, #{roll_no}, #{address}, #{contact}"
   end
 end
+
+class SchoolDatabase
+    def initialize
+      @connect_db = PG.connect(dbname: ENV['DBNAME'], user: ENV['DBUSER'], password: ENV['PASSWORD'], host:ENV['HOST'])
+    end
+  
+    def add_student(student)
+      @connect_db.exec_params('INSERT INTO student(name, address, contact, roll_no, class_id) VALUES ($1,$2,$3,$4,$5)',
+                              [student.name, student.address, student.contact, student.roll_no, student.class_id])
+      puts "Added new student: #{student}"
+    end
+end
+
+class School
+    def initialize
+      @database = SchoolDatabase.new
+      menu
+    end
+  
+    def add_student
+      print 'Enter name:'
+      name = gets.chomp
+      print 'Enter class:'
+      class_id = gets.chomp
+      print 'Enter roll no.:'
+      roll_no = gets.chomp
+      print 'Enter address:'
+      address = gets.chomp
+      print 'Enter contact:'
+      contact = gets.chomp
+  
+      student = Student.new(name, class_id, roll_no, address, contact)
+      @database.add_student(student)
+    end
+
+    def menu
+      puts "Hello! How can I help?\n1.ADD NEW STUDENT\n2.READ\n3.UPDATE STUDENT\n4.DELETE"
+      menu = gets.chomp
+      case menu
+      when '1'
+        add_student
+      when '2'
+        display_students
+      when '3'
+        edit_student
+      when '4'
+        del_student
+      else
+        puts 'No such option found'
+      end
+    end
+end
+
+School.new

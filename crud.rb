@@ -40,6 +40,11 @@ class SchoolDatabase
       @connect_db.exec_params('UPDATE student SET address=$1, contact=$2 WHERE student_id=$3', [address, contact, id])
       puts "Updated address and contact of student having ID: #{id}"
     end
+
+    def del_student(id)
+      @connect_db.exec_params('DELETE FROM student WHERE student_id=$1', [id])
+      puts "Deleted student of ID: #{id}"
+    end
 end
 
 class School
@@ -78,6 +83,14 @@ class School
       contact = gets.chomp
 
       @database.edit_student(id, address, contact)
+    end
+
+    def del_student
+      puts 'Enter the id of the student whose details you want to delete!'
+      print 'Enter id:'
+      id = gets.chomp
+
+      @database.del_student(id)
     end
 
     def menu
